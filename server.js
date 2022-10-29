@@ -58,16 +58,6 @@ const handler = (req, res) => res.send(path.join(__dirname, "public/index.html")
 const routes = ['/', '/blog', '/about'];
 routes.forEach(route => app.get(route, handler))
 
-app.get('/api/customers', (req, res) => {
-    const customers = [
-        {id: 1, firstName: 'John', lastName: 'Doe'},
-        {id: 2, firstName: 'Steve', lastName: 'Smith'},
-        {id: 3, firstName: 'Mary', lastName: 'Swanson'}
-    ]
-
-    res.json(customers);
-})
-
 app.get('/api/Blogs', (req, res) => {
     res.json(blog);
 })
