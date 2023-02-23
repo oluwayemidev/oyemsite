@@ -6,7 +6,41 @@ const bodyParser = require('body-parser')
 const blog = require('./public/Blog/blog.json');
 const multer = require('multer');
 
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './public/Blog/images/')
+    },
+    filename: function(req, file, cb){
+        cb(null, Date.now() + file.originalname)
+    }
+});
 
+const filefilter = (req, file, cb) => {
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png'){
+        cb(null, true);
+    }else{
+        cb(null, false)
+    }
+}
+const upload = multer({
+    storage: storage,
+    fileFilter: filefilter
+});
+
+const jsonParser = bodyParser.json()
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
+app.use(jsonParser)
+app.use(urlencodedParser)
+
+app.use('/', express.static('admin'));
+
+const port = parseInt(process.env.PORT || 5000, 10);
+const public_path = path.resolve(__dirname, "public");
+const public_url = process.env || `http://loclhost:${port}`;
+
+const indexHTML = path.join(public_path, "index.html");
+const indexHtmlContent = fs.readFileSync(indexHTML, "utf-8").replace(/__PUBLIC_URL_PLACEHOLDER__/g, public_url);
+const admin = fs.readFileSync('./public/Admin/admin.html', 'utf8');
 
 app.use(express.static('public')); // default
 
